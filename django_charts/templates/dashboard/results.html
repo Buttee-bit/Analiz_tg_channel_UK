@@ -1,0 +1,32 @@
+{% extends 'partials/base.html' %} {% block title %}Dashboard results{% endblock %} {% block content %}
+<div class="row cintainer">
+    <div class="container">
+        <canvas id-="pie-charts"></canvas>
+    </div>
+
+</div>
+<script>
+    let label_django = {
+        {
+            listkeys | SafeArray
+        }
+    }
+    var myPieChart = new Chart(document.getElementById("pie-chart"), {
+        type: 'pie',
+        data: {
+            labels: [],
+            datasets: [{
+                label: "",
+                data: {},
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Анализ на круговой диаграмме'
+            }
+        }
+    });
+</script>
+
+{% endblock %}
