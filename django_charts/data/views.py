@@ -68,6 +68,8 @@ def results(request):
         'listkeys': listkeys,
         'listvalues': listvalues,
     }
-    print(context)
+    print(len(context['listkeys']))
+    print(len(context['listvalues']))
+
 
     return render(request,'dashboard/results.html',context)
