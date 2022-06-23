@@ -6,11 +6,15 @@
 <body>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <div class="col-md-20">
-        <div class="container col-md-10">
+
+    <div class="col-md-24" name="value_counts">
+        <div class="container col-md-24">
             <canvas id="myChart_counts" style="position: relative; height:40vh; width:80vw"></canvas>
         </div>
-         <div class="container col-md-6">
+    </div>
+
+    <div class="col-md-30" name="data_week">
+        <div class="container col-md-2">
             <canvas id="myChart" style="position: relative; height:40vh; width:80vw"></canvas>
         </div>
     </div>
@@ -18,21 +22,21 @@
 
 </html>
 <script>
-    var ctx = document.getElementById('myChart_counts').getContext('2d');
-    var chart = new Chart(ctx, {
+    var ctx1 = document.getElementById('myChart_counts').getContext('2d');
+    var chart1 = new Chart(ctx1, {
         // Тип графика
         type: 'bar',
 
         // Создание графиков
         data: {
             // Точки графиков
-            labels: {{listkeys | safe}},
+            labels: {{list_keys_valuse_counts | safe}},
             // График
             datasets: [{
                 label: 'Количество постов за все время ', // Название
                 backgroundColor: 'rgb(255, 99, 132)', // Цвет закраски
                 borderColor: 'rgb(255, 99, 132)', // Цвет линии
-                data: {{listvalues | safe}}, // Данные каждой точки графика
+                data: {{list_values_valuse_counts | safe}}, // Данные каждой точки графика
             }]
         },
 
@@ -41,21 +45,23 @@
             responsive: true
         }
     });
-     var ctx = document.getElementById('myChart_counts').getContext('2d');
-    var chart = new Chart(ctx, {
+</script>
+<script>
+        var ctx2 = document.getElementById('myChart').getContext('2d');
+        var chart2 = new Chart(ctx2, {
         // Тип графика
         type: 'bar',
 
         // Создание графиков
         data: {
             // Точки графиков
-            labels: {{listkeys | safe}},
+            labels: {{list_keys_to_week | safe}},
             // График
             datasets: [{
-                label: 'Мой первый график на Chart.js', // Название
+                label: 'Количество постов за Понедельник', // Название
                 backgroundColor: 'rgb(255, 99, 132)', // Цвет закраски
                 borderColor: 'rgb(255, 99, 132)', // Цвет линии
-                data: {{listvalues | safe}}, // Данные каждой точки графика
+                data: {{list_values_to_week | safe}}, // Данные каждой точки графика
             }]
         },
 
