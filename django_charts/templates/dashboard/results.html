@@ -5,19 +5,33 @@
 
 <body>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <div class="col-md-24" name="value_counts">
-        <div class="container col-md-24">
-            <canvas id="myChart_counts" style="position: relative; height:40vh; width:80vw"></canvas>
+<div class="col-md-24" name="value_counts">
+    <div class="container col-md-24">
+        <canvas id="myChart_counts" style="position: relative; height:40vh; width:80vw"></canvas>
+    </div>
+    <p class="text-right">Херня</p>
+</div>
+<div class="row">
+    <div class="col-md-20" name="data_mount">
+        <div class="container col-md-30">
+            <div class="row">
+                <div>Хуй</div>
+                <canvas id="myChart_mount" style="position: relative; height:40vh; width:80vw"></canvas>
+            </div>
+            <div class="cell">
+                <a align="right">Хуйня ебаная</a>
+            </div>
         </div>
     </div>
+</div>
 
-    <div class="col-md-30" name="data_week">
-        <div class="container col-md-2">
-            <canvas id="myChart" style="position: relative; height:40vh; width:80vw"></canvas>
-        </div>
+<div class="col-md-30" name="data_week">
+    <div class="container col-md-6">
+        <canvas id="myChart" style="position: relative; height:40vh; width:80vw"></canvas>
     </div>
+</div>
 </body>
 
 </html>
@@ -33,7 +47,7 @@
             labels: {{list_keys_valuse_counts | safe}},
             // График
             datasets: [{
-                label: 'Количество постов за все время ', // Название
+                label: 'Количество постов по группам ', // Название
                 backgroundColor: 'rgb(255, 99, 132)', // Цвет закраски
                 borderColor: 'rgb(255, 99, 132)', // Цвет линии
                 data: {{list_values_valuse_counts | safe}}, // Данные каждой точки графика
@@ -45,6 +59,32 @@
             responsive: true
         }
     });
+    var ctx3 = document.getElementById('myChart_mount').getContext('2d');
+    var chart3 = new Chart(ctx3, {
+        // Тип графика
+        type: 'line',
+
+        // Создание графиков
+        data: {
+            // Точки графиков
+            labels: {{list_keys_mount | safe}},
+            // График
+            datasets: [{
+                label: 'Количество постов за все время ', // Название
+                backgroundColor: 'rgb(255, 99, 132)', // Цвет закраски
+                borderColor: 'rgb(255, 99, 132)', // Цвет линии
+                data: {{list_values_mount | safe}}, // Данные каждой точки графика
+            }]
+        },
+
+        // Настройки графиков
+        options: {
+            responsive: true
+        }
+    });
+
+
+
 </script>
 <script>
         var ctx2 = document.getElementById('myChart').getContext('2d');
@@ -70,5 +110,8 @@
             responsive: true
         }
     });
+
+
+
 </script>
 {% endblock %}
