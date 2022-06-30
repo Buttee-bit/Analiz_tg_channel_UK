@@ -1,8 +1,9 @@
 from django.urls import path
-from . import views 
 
+from . import views
 
 urlpatterns = [
-    path('',views.index, name='dashboard-index'),
-    path('results',views.results, name='results')
+    path('', views.index, name='homepage'),
+    path('results', views.results, name='analiz_data')
 ]
+
