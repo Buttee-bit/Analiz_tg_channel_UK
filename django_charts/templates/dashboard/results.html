@@ -9,28 +9,21 @@
 
 <div class="col-md-24" name="value_counts">
     <div class="container col-md-24">
+        <canvas id="myChart_mount" style="position: relative; height:40vh; width:80vw"></canvas>
         <canvas id="myChart_counts" style="position: relative; height:40vh; width:80vw"></canvas>
-    </div>
-    <p class="text-right">Херня</p>
-</div>
-<div class="row">
-    <div class="col-md-20" name="data_mount">
-        <div class="container col-md-30">
-            <div class="row">
-                <div>Хуй</div>
-                <canvas id="myChart_mount" style="position: relative; height:40vh; width:80vw"></canvas>
-            </div>
-            <div class="cell">
-                <a align="right">Хуйня ебаная</a>
-            </div>
-        </div>
     </div>
 </div>
 
 <div class="col-md-30" name="data_week">
-    <div class="container col-md-6">
-        <canvas id="myChart" style="position: relative; height:40vh; width:80vw"></canvas>
-    </div>
+
+    <canvas id="myChart_Monday" style="position: relative; height:40vh; width:80vw"></canvas>
+    <canvas id="myChart_Saturday" style="position: relative; height:40vh; width:80vw"></canvas>
+    <canvas id="myChart_Sunday" style="position: relative; height:40vh; width:80vw"></canvas>
+    <canvas id="myChart_Thursday" style="position: relative; height:40vh; width:80vw"></canvas>
+    <canvas id="myChart_Tuesday" style="position: relative; height:40vh; width:80vw"></canvas>
+    <canvas id="myChart_Wednesday" style="position: relative; height:40vh; width:80vw"></canvas>
+    <canvas id="myChart_Friday" style="position: relative; height:40vh; width:80vw"></canvas>
+
 </div>
 </body>
 
@@ -82,26 +75,159 @@
             responsive: true
         }
     });
-
-
-
-</script>
-<script>
-        var ctx2 = document.getElementById('myChart').getContext('2d');
-        var chart2 = new Chart(ctx2, {
+    var ctx4 = document.getElementById('myChart_Monday').getContext('2d');
+    var chart4 = new Chart(ctx4, {
         // Тип графика
         type: 'bar',
 
         // Создание графиков
         data: {
             // Точки графиков
-            labels: {{list_keys_to_week | safe}},
+            labels: {{list_keys_mount | safe}},
             // График
             datasets: [{
                 label: 'Количество постов за Понедельник', // Название
                 backgroundColor: 'rgb(255, 99, 132)', // Цвет закраски
                 borderColor: 'rgb(255, 99, 132)', // Цвет линии
-                data: {{list_values_to_week | safe}}, // Данные каждой точки графика
+                data: {{list_values_mount | safe}}, // Данные каждой точки графика
+            }]
+        },
+
+        // Настройки графиков
+        options: {
+            responsive: true
+        }
+    });
+        var ctx5 = document.getElementById('myChart_Saturday').getContext('2d');
+    var chart5 = new Chart(ctx5, {
+        // Тип графика
+        type: 'bar',
+
+        // Создание графиков
+        data: {
+            // Точки графиков
+            labels: {{list_keys_mount | safe}},
+            // График
+            datasets: [{
+                label: 'Количество постов за Вторник', // Название
+                backgroundColor: 'rgb(255, 99, 132)', // Цвет закраски
+                borderColor: 'rgb(255, 99, 132)', // Цвет линии
+                data: {{list_values_mount | safe}}, // Данные каждой точки графика
+            }]
+        },
+
+        // Настройки графиков
+        options: {
+            responsive: true
+        }
+    });
+        var ctx6 = document.getElementById('myChart_Sunday').getContext('2d');
+    var chart6= new Chart(ctx6, {
+        // Тип графика
+        type: 'bar',
+
+        // Создание графиков
+        data: {
+            // Точки графиков
+            labels: {{list_keys_mount | safe}},
+            // График
+            datasets: [{
+                label: 'Количество постов за Среду', // Название
+                backgroundColor: 'rgb(255, 99, 132)', // Цвет закраски
+                borderColor: 'rgb(255, 99, 132)', // Цвет линии
+                data: {{list_values_mount | safe}}, // Данные каждой точки графика
+            }]
+        },
+
+        // Настройки графиков
+        options: {
+            responsive: true
+        }
+    });
+        var ctx7 = document.getElementById('myChart_Thursday').getContext('2d');
+    var chart7 = new Chart(ctx7, {
+        // Тип графика
+        type: 'bar',
+
+        // Создание графиков
+        data: {
+            // Точки графиков
+            labels: {{list_keys_mount | safe}},
+            // График
+            datasets: [{
+                label: 'Количество постов за Четверг', // Название
+                backgroundColor: 'rgb(255, 99, 132)', // Цвет закраски
+                borderColor: 'rgb(255, 99, 132)', // Цвет линии
+                data: {{list_values_mount | safe}}, // Данные каждой точки графика
+            }]
+        },
+
+        // Настройки графиков
+        options: {
+            responsive: true
+        }
+    });
+        var ctx8 = document.getElementById('myChart_Tuesday').getContext('2d');
+    var chart8 = new Chart(ctx8, {
+        // Тип графика
+        type: 'bar',
+
+        // Создание графиков
+        data: {
+            // Точки графиков
+            labels: {{list_keys_mount | safe}},
+            // График
+            datasets: [{
+                label: 'Количество постов за Пятницу', // Название
+                backgroundColor: 'rgb(255, 99, 132)', // Цвет закраски
+                borderColor: 'rgb(255, 99, 132)', // Цвет линии
+                data: {{list_values_mount | safe}}, // Данные каждой точки графика
+            }]
+        },
+
+        // Настройки графиков
+        options: {
+            responsive: true
+        }
+    });
+            var ctx9 = document.getElementById('myChart_Wednesday').getContext('2d');
+    var chart9 = new Chart(ctx9, {
+        // Тип графика
+        type: 'bar',
+
+        // Создание графиков
+        data: {
+            // Точки графиков
+            labels: {{list_keys_mount | safe}},
+            // График
+            datasets: [{
+                label: 'Количество постов за Субботу', // Название
+                backgroundColor: 'rgb(255, 99, 132)', // Цвет закраски
+                borderColor: 'rgb(255, 99, 132)', // Цвет линии
+                data: {{list_values_mount | safe}}, // Данные каждой точки графика
+            }]
+        },
+
+        // Настройки графиков
+        options: {
+            responsive: true
+        }
+    });
+            var ctx10 = document.getElementById('myChart_Friday').getContext('2d');
+    var chart10 = new Chart(ctx10, {
+        // Тип графика
+        type: 'bar',
+
+        // Создание графиков
+        data: {
+            // Точки графиков
+            labels: {{list_keys_mount | safe}},
+            // График
+            datasets: [{
+                label: 'Количество постов за Воскресенье', // Название
+                backgroundColor: 'rgb(255, 99, 132)', // Цвет закраски
+                borderColor: 'rgb(255, 99, 132)', // Цвет линии
+                data: {{list_values_mount | safe}}, // Данные каждой точки графика
             }]
         },
 
@@ -113,5 +239,9 @@
 
 
 
+
+
+
 </script>
+
 {% endblock %}
