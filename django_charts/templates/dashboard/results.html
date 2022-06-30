@@ -13,13 +13,13 @@
     </div>
 
     <div class="second-container" name="data_week">
-<!--        <canvas id="myChart_Monday"></canvas>-->
-<!--            <canvas id="myChart_Thursday"></canvas>-->
-<!--        <canvas id="myChart_Saturday"></canvas>-->
-<!--            <canvas id="myChart_Sunday"></canvas>-->
-<!--            <canvas id="myChart_Friday"></canvas>-->
-<!--        <canvas id="myChart_Tuesday"></canvas>-->
-<!--        <canvas id="myChart_Wednesday"></canvas>-->
+        <!--        <canvas id="myChart_Monday"></canvas>-->
+        <!--            <canvas id="myChart_Thursday"></canvas>-->
+        <!--        <canvas id="myChart_Saturday"></canvas>-->
+        <!--            <canvas id="myChart_Sunday"></canvas>-->
+        <!--            <canvas id="myChart_Friday"></canvas>-->
+        <!--        <canvas id="myChart_Tuesday"></canvas>-->
+        <!--        <canvas id="myChart_Wednesday"></canvas>-->
         <div>
             <canvas id="myChart_Monday"></canvas>
             <canvas id="myChart_Thursday"></canvas>
@@ -27,12 +27,13 @@
         </div>
         <div>
             <canvas id="myChart_Saturday"></canvas>
-            <canvas id="myChart_Sunday"></canvas>
+            <canvas id="myChart_Tuesday"></canvas>
             <canvas id="myChart_Friday"></canvas>
+
         </div>
-         <div>
-        <canvas id="myChart_Tuesday"></canvas>
-        <canvas id="myChart_Wednesday"></canvas>
+        <div>
+            <canvas id="myChart_Sunday"></canvas>
+            <canvas id="myChart_Wednesday"></canvas>
         </div>
     </div>
 
@@ -56,6 +57,10 @@
 
     .container {
     }
+
+
+
+
 
 
 
@@ -117,13 +122,13 @@
         // Создание графиков
         data: {
             // Точки графиков
-            labels: {{list_keys_mount | safe}},
+            labels: {{list_k_Monday | safe}},
             // График
             datasets: [{
                 label: 'Количество постов за Понедельник', // Название
                 backgroundColor: 'rgb(255, 99, 132)', // Цвет закраски
                 borderColor: 'rgb(255, 99, 132)', // Цвет линии
-                data: {{list_values_mount | safe}}, // Данные каждой точки графика
+                data: {{list_v_Monday | safe}}, // Данные каждой точки графика
             }]
         },
 
@@ -140,13 +145,13 @@
         // Создание графиков
         data: {
             // Точки графиков
-            labels: {{list_keys_mount | safe}},
+            labels: {{list_k_Saturday | safe}},
             // График
             datasets: [{
                 label: 'Количество постов за Вторник', // Название
                 backgroundColor: 'rgb(255, 99, 132)', // Цвет закраски
                 borderColor: 'rgb(255, 99, 132)', // Цвет линии
-                data: {{list_values_mount | safe}}, // Данные каждой точки графика
+                data: {{list_v_Saturday | safe}}, // Данные каждой точки графика
             }]
         },
 
@@ -163,13 +168,13 @@
         // Создание графиков
         data: {
             // Точки графиков
-            labels: {{list_keys_mount | safe}},
+            labels: {{list_k_Sunday | safe}},
             // График
             datasets: [{
                 label: 'Количество постов за Среду', // Название
                 backgroundColor: 'rgb(255, 99, 132)', // Цвет закраски
                 borderColor: 'rgb(255, 99, 132)', // Цвет линии
-                data: {{list_values_mount | safe}}, // Данные каждой точки графика
+                data: {{list_v_Sunday | safe}}, // Данные каждой точки графика
             }]
         },
 
@@ -186,13 +191,13 @@
         // Создание графиков
         data: {
             // Точки графиков
-            labels: {{list_keys_mount | safe}},
+            labels: {{list_k_Thursday | safe}},
             // График
             datasets: [{
                 label: 'Количество постов за Четверг', // Название
                 backgroundColor: 'rgb(255, 99, 132)', // Цвет закраски
                 borderColor: 'rgb(255, 99, 132)', // Цвет линии
-                data: {{list_values_mount | safe}}, // Данные каждой точки графика
+                data: {{list_v_Thursday | safe}}, // Данные каждой точки графика
             }]
         },
 
@@ -209,13 +214,13 @@
         // Создание графиков
         data: {
             // Точки графиков
-            labels: {{list_keys_mount | safe}},
+            labels: {{list_k_Tuesday | safe}},
             // График
             datasets: [{
                 label: 'Количество постов за Пятницу', // Название
                 backgroundColor: 'rgb(255, 99, 132)', // Цвет закраски
                 borderColor: 'rgb(255, 99, 132)', // Цвет линии
-                data: {{list_values_mount | safe}}, // Данные каждой точки графика
+                data: {{list_v_Tuesday | safe}}, // Данные каждой точки графика
             }]
         },
 
@@ -232,13 +237,13 @@
         // Создание графиков
         data: {
             // Точки графиков
-            labels: {{list_keys_mount | safe}},
+            labels: {{list_k_Wednesday | safe}},
             // График
             datasets: [{
                 label: 'Количество постов за Субботу', // Название
                 backgroundColor: 'rgb(255, 99, 132)', // Цвет закраски
                 borderColor: 'rgb(255, 99, 132)', // Цвет линии
-                data: {{list_values_mount | safe}}, // Данные каждой точки графика
+                data: {{list_v_Wednesday | safe}}, // Данные каждой точки графика
             }]
         },
 
@@ -255,13 +260,13 @@
         // Создание графиков
         data: {
             // Точки графиков
-            labels: {{list_keys_mount | safe}},
+            labels: {{list_k_Friday | safe}},
             // График
             datasets: [{
                 label: 'Количество постов за Воскресенье', // Название
                 backgroundColor: 'rgb(255, 99, 132)', // Цвет закраски
                 borderColor: 'rgb(255, 99, 132)', // Цвет линии
-                data: {{list_values_mount | safe}}, // Данные каждой точки графика
+                data: {{list_v_Friday | safe}}, // Данные каждой точки графика
             }]
         },
 
@@ -270,6 +275,10 @@
             responsive: true
         }
     });
+
+
+
+
 
 
 
