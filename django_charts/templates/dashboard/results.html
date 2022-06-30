@@ -6,28 +6,62 @@
 <body>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<div class="col-md-24" name="value_counts">
-    <div class="container col-md-24">
-        <canvas id="myChart_mount" style="position: relative; height:40vh; width:80vw"></canvas>
-        <canvas id="myChart_counts" style="position: relative; height:40vh; width:80vw"></canvas>
+<div class="main-container">
+    <div class="first-container">
+        <canvas id="myChart_mount"></canvas>
+        <canvas id="myChart_counts"></canvas>
     </div>
+
+    <div class="second-container" name="data_week">
+<!--        <canvas id="myChart_Monday"></canvas>-->
+<!--            <canvas id="myChart_Thursday"></canvas>-->
+<!--        <canvas id="myChart_Saturday"></canvas>-->
+<!--            <canvas id="myChart_Sunday"></canvas>-->
+<!--            <canvas id="myChart_Friday"></canvas>-->
+<!--        <canvas id="myChart_Tuesday"></canvas>-->
+<!--        <canvas id="myChart_Wednesday"></canvas>-->
+        <div>
+            <canvas id="myChart_Monday"></canvas>
+            <canvas id="myChart_Thursday"></canvas>
+
+        </div>
+        <div>
+            <canvas id="myChart_Saturday"></canvas>
+            <canvas id="myChart_Sunday"></canvas>
+            <canvas id="myChart_Friday"></canvas>
+        </div>
+         <div>
+        <canvas id="myChart_Tuesday"></canvas>
+        <canvas id="myChart_Wednesday"></canvas>
+        </div>
+    </div>
+
 </div>
-
-<div class="col-md-30" name="data_week">
-
-    <canvas id="myChart_Monday" style="position: relative; height:40vh; width:80vw"></canvas>
-    <canvas id="myChart_Saturday" style="position: relative; height:40vh; width:80vw"></canvas>
-    <canvas id="myChart_Sunday" style="position: relative; height:40vh; width:80vw"></canvas>
-    <canvas id="myChart_Thursday" style="position: relative; height:40vh; width:80vw"></canvas>
-    <canvas id="myChart_Tuesday" style="position: relative; height:40vh; width:80vw"></canvas>
-    <canvas id="myChart_Wednesday" style="position: relative; height:40vh; width:80vw"></canvas>
-    <canvas id="myChart_Friday" style="position: relative; height:40vh; width:80vw"></canvas>
-
 </div>
 </body>
 
 </html>
+
+<style>
+
+    .main-container {
+    display: flex;
+    flex-direction: column;
+    }
+    .second-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+    }
+
+    .container {
+    }
+
+
+
+
+
+</style>
 <script>
     var ctx1 = document.getElementById('myChart_counts').getContext('2d');
     var chart1 = new Chart(ctx1, {
@@ -236,6 +270,11 @@
             responsive: true
         }
     });
+
+
+
+
+
 
 
 
