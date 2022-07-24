@@ -40,8 +40,8 @@ def readfile(filename):
         list_values_mount, dict_week
 
     ## Чтение и обрабока данных
-    def normalize_data(data):
-        data = pd.read_csv('news_tg_bess.csv')
+    def normalize_data():
+        data = pd.read_csv('data_tg.csv')
         data['date_time'] = data['date'] + ' ' + data['time']
         data['date_time'] = pd.to_datetime(data['date_time'])
         data.index = data['date_time']
@@ -54,8 +54,7 @@ def readfile(filename):
 
         return data
 
-    data_norm = normalize_data(filename
-                               )
+    data_norm = normalize_data()
 
     ##  Создание графика распределения по дням для каждой группы
     def get_list_value_counts(data_norm):
@@ -146,5 +145,8 @@ def results(request):
         'list_k_Friday': list_k_Friday,
         'list_v_Friday': list_v_Friday
     }
-    print(context)
     return render(request, 'dashboard/results.html', context)
+
+def nlp_results(request):
+    list_path_photo = []
+    return render(request,'dashboard/nlp_results.html')
