@@ -1,20 +1,6 @@
 import os
-import docx
-import re
+
 import pandas as pd
-import numpy as np
-import pickle
-
-import nltk
-from nltk.corpus import stopwords
-from nltk.stem.porter import PorterStemmer
-from nltk.stem import WordNetLemmatizer
-from nltk.stem import SnowballStemmer as snow
-
-from sklearn.feature_extraction.text import  TfidfVectorizer
-
-
-
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
@@ -24,10 +10,10 @@ from django.shortcuts import render, redirect
 
 
 def index(request):
-    global attributied, name
+    global attributied
     if request.method == "POST":
         uploaded_file = request.FILES['document']
-        if uploaded_file.name.endswith('.docx'):
+        if uploaded_file.name.endswith('.csv'):
             # save csv file in media folder
             savefile = FileSystemStorage()
 
@@ -39,7 +25,7 @@ def index(request):
             readfile(file_directiry)
             return redirect(results)
     else:
-        pass
+        messages.warning(request, 'File was not uploaded. Please use csv file extension !')
 
     return render(request, 'dashboard/index.html')
 
@@ -48,133 +34,116 @@ def index(request):
 
 def readfile(filename):
     ## Объявление глобальных переменных
-    global model, path_document, \
-        data_norm, list_text_doc, len_doc_paragraph, \
-        df_docx, dict_class_color, \
+    global list_keys_valuse_counts, list_values_valuse_counts, \
+        data_norm, my_file, list_keys_to_week, \
+        list_values_to_week, list_keys_mount, \
         list_values_mount, dict_week
 
     ## Чтение и обрабока данных
+    def normalize_data():
+        data = pd.read_csv('data_tg.csv')
+        data['date_time'] = data['date'] + ' ' + data['time']
+        data['date_time'] = pd.to_datetime(data['date_time'])
+        data.index = data['date_time']
+        data = data.drop(columns=['date', 'time'], axis=1)
+        data = data.drop(columns=['md5'], axis=1)
+        data = data.drop(columns=['image'], axis=1)
+        data = data.drop(columns=['messageLink'], axis=1)
+        data = data.drop(columns=['messageImage'], axis=1)
+        data = data.drop(columns=['forwardedChanel'], axis=1)
 
+        return data
 
-    #data_norm = normalize_data()
-    def get_model(path_model):
-        with open(path_model, 'rb') as file:
-            pickle_model = pickle.load(file)
-        return pickle_model
-    model = get_model(r'model\LinearSVC_model_2700.pkl')
+    data_norm = normalize_data()
 
     ##  Создание графика распределения по дням для каждой группы
-    def load_file(path_to_file):
-        doc = docx.Document(path_to_file)
-        all_paragraphs = doc.paragraphs
-        list_text_doc = [par.text for par in all_paragraphs]
-        len_doc_paragraph = len(all_paragraphs)
-        return list_text_doc, len_doc_paragraph
-    list_text_doc,len_doc_paragraph = load_file('media\\' + name)
+    def get_list_value_counts(data_norm):
+        data_counts = data_norm.groupby('chanel', as_index=False).agg({
+            "id": 'count'
+        }).sort_values('id', ascending=False)
+        list_keys_valuse_counts = []
+        list_values_valuse_counts = []
+        for key, value in zip(data_counts['chanel'], data_counts['id']):
+            list_keys_valuse_counts.append(key)
+            list_values_valuse_counts.append(value)
+        return list_keys_valuse_counts, list_values_valuse_counts
 
-    def get_dict_class_to_color(path_color):
-        dict_class_color ={}
-        df = pd.read_csv(path_color)
-        df.index = df['Unnamed: 0']
-        f_1 = df['f1-score']
-        for class_, value in zip(f_1.index, f_1.values):
-            if value < .25:
-                dict_class_color[class_] = 'black'
-            if value < .5 and value > .25:
-                dict_class_color[class_] = 'brown'
-            if value < .75 and value > 0.5:
-                dict_class_color[class_] = 'green'
-            if value > .75:
-                dict_class_color[class_] = 'blue'
+    list_keys_valuse_counts, list_values_valuse_counts = get_list_value_counts(data_norm)
 
-        return dict_class_color
-
-
-    dict_class_color = get_dict_class_to_color('model\\'+ 'df_class_rep.csv')
-    print(dict_class_color)
-    #list_keys_valuse_counts, list_values_valuse_counts = get_list_value_counts(data_norm)
-    def pandas_df_text(text_doc):
-        df = pd.DataFrame(text_doc, columns=['text'])
-        return df
-
-    df_docx = pandas_df_text(list_text_doc)
     ## Создание графика распределения сообщений по дням месяца
-    def clear_text(text):
-        stop_words = set(stopwords.words('russian'))
-        text_cleaning_re = "[A-Za-z0-9!#$%&'()*+,./:;<=>?@[\]^_`{|}~—\"\-]+"
-        tokens = []
-        text = re.sub(text_cleaning_re, ' ', str(text).lower()).strip()
-        text = re.sub(r'\s+', ' ', text)
-        for token in text.split():
-            if token not in stop_words:
-                token = "".join(c for c in token if token.isalnum())
-                if len(token) != 2:
-                    tokens.append(token)
-        return " ".join(tokens)
+    def get_list_key_value_mount(data_norm):
+        data_norm_M = data_norm.resample('d').id.nunique().to_frame(name='mount_count')
+        data_norm_M['Day'] = data_norm_M.index.day
+        list_keys_mount = list(data_norm_M.Day.unique())
+        list_values_mount = list(data_norm_M.mount_count)
+        return list_keys_mount, list_values_mount
 
-    def pre_process(text):
-        stemmer = snow('russian')
-        tokens = []
-        for token in text.split():
-            tokens.append(stemmer.stem(token))
-        return " ".join(tokens)
+    list_keys_mount, list_values_mount = get_list_key_value_mount(data_norm)
 
-    texts_ = df_docx.text.apply(lambda x: clear_text(x))
-    texts_stemm = texts_.apply(lambda x: pre_process(x))
+    def value_for_week(data_norm):
 
-    #list_keys_mount, list_values_mount = get_list_key_value_mount(data_norm)
-#Возвращает словарь в котором обозначено в каком параграфе какой класс
-    def tfidf_text(texts_stemm):
-        tfidf_doc = TfidfVectorizer(max_features=2745, ngram_range=(1, 4))
-        X = tfidf_doc.fit_transform(texts_stemm)
-        Ypredict = model.predict(X)
-        Ypredict = Ypredict.tolist()
-        range_ = [i for i in range(len(Ypredict))]
-        dict_ = {}
-        for i in range_:
-            dict_[i] = Ypredict[i]
-        return dict_
-    dict_ = tfidf_text(texts_stemm)
+        data_to_week = pd.DataFrame(data=data_norm, index=None)
+        data_to_week['date_time'] = pd.to_datetime(data_to_week['date_time'])
+        data_to_week['dow'] = data_to_week.date_time.dt.day_name()
+        data_to_week['hour'] = data_to_week.date_time.dt.hour
 
-    #dict_week = value_for_week(data_norm)
+        data_to_week = data_to_week.groupby([
+            'dow',
+            'hour'
+        ]).hour.count().to_frame(name='day_hour_count')
+        data_to_week = data_to_week.reset_index()
+        # Сюда вставить цикл по дням недели
+        list_week = list(data_to_week.dow.unique())
+
+        dict_week = {}
+        for i in list_week:
+            dict_week[i] = [[], []]
+
+        for day in dict_week:
+            data_to_day = data_to_week[data_to_week['dow'] == day]
+            for key, value in zip(data_to_day['hour'], data_to_day['day_hour_count']):
+                dict_week[day][0].append(key)
+                dict_week[day][1].append(value)
+        return dict_week
+
+    dict_week = value_for_week(data_norm)
 
 
 def results(request):
-
-    #list_k_Monday = dict_week['Monday'][0]
-    #list_v_Monday = dict_week['Monday'][1]
-    #list_k_Saturday = dict_week['Saturday'][0]
-    #list_v_Saturday = dict_week['Saturday'][1]
-    #list_k_Sunday = dict_week['Sunday'][0]
-    #list_v_Sunday = dict_week['Sunday'][1]
-    #list_k_Thursday = dict_week['Thursday'][0]
-    #list_v_Thursday = dict_week['Thursday'][1]
-    #list_k_Tuesday = dict_week['Tuesday'][0]
-    #list_v_Tuesday = dict_week['Tuesday'][1]
-    #list_k_Wednesday = dict_week['Wednesday'][0]
-    #list_v_Wednesday = dict_week['Wednesday'][1]
-    #list_k_Friday = dict_week['Friday'][0]
-    #list_v_Friday = dict_week['Friday'][1]
+    list_k_Monday = dict_week['Monday'][0]
+    list_v_Monday = dict_week['Monday'][1]
+    list_k_Saturday = dict_week['Saturday'][0]
+    list_v_Saturday = dict_week['Saturday'][1]
+    list_k_Sunday = dict_week['Sunday'][0]
+    list_v_Sunday = dict_week['Sunday'][1]
+    list_k_Thursday = dict_week['Thursday'][0]
+    list_v_Thursday = dict_week['Thursday'][1]
+    list_k_Tuesday = dict_week['Tuesday'][0]
+    list_v_Tuesday = dict_week['Tuesday'][1]
+    list_k_Wednesday = dict_week['Wednesday'][0]
+    list_v_Wednesday = dict_week['Wednesday'][1]
+    list_k_Friday = dict_week['Friday'][0]
+    list_v_Friday = dict_week['Friday'][1]
 
     context = {
-        #'list_keys_mount': list_keys_mount,
-        #'list_values_mount': list_values_mount,
-        #'list_keys_valuse_counts': list_keys_valuse_counts,
-        #'list_values_valuse_counts': list_values_valuse_counts,
-        #'list_k_Monday': list_k_Monday,
-        #'list_v_Monday': list_v_Monday,
-        #'list_k_Saturday': list_k_Saturday,
-        #'list_v_Saturday': list_v_Saturday,
-       # 'list_k_Sunday': list_k_Sunday,
-        #'list_v_Sunday': list_v_Sunday,
-        #'list_k_Thursday': list_k_Thursday,
-        #'list_v_Thursday': list_v_Thursday,
-        #'list_k_Tuesday': list_k_Tuesday,
-        #'list_v_Tuesday': list_v_Tuesday,
-        #'list_k_Wednesday': list_k_Wednesday,
-        #'list_v_Wednesday': list_v_Wednesday,
-        #'list_k_Friday': list_k_Friday,
-        #'list_v_Friday': list_v_Friday
+        'list_keys_mount': list_keys_mount,
+        'list_values_mount': list_values_mount,
+        'list_keys_valuse_counts': list_keys_valuse_counts,
+        'list_values_valuse_counts': list_values_valuse_counts,
+        'list_k_Monday': list_k_Monday,
+        'list_v_Monday': list_v_Monday,
+        'list_k_Saturday': list_k_Saturday,
+        'list_v_Saturday': list_v_Saturday,
+        'list_k_Sunday': list_k_Sunday,
+        'list_v_Sunday': list_v_Sunday,
+        'list_k_Thursday': list_k_Thursday,
+        'list_v_Thursday': list_v_Thursday,
+        'list_k_Tuesday': list_k_Tuesday,
+        'list_v_Tuesday': list_v_Tuesday,
+        'list_k_Wednesday': list_k_Wednesday,
+        'list_v_Wednesday': list_v_Wednesday,
+        'list_k_Friday': list_k_Friday,
+        'list_v_Friday': list_v_Friday
     }
     return render(request, 'dashboard/results.html', context)
 
